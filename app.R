@@ -13,8 +13,8 @@ ui <- fluidPage(
   
   # Application title
   titlePanel("Predicciones sobre encuesta COVID 2020"),
-  #plotOutput('corrplot'),
- 
+  
+  plotOutput('corrplot'),
   # Sidebar with a slider input for number of bins 
   titlePanel("Panel"),
   sidebarLayout(
@@ -22,7 +22,10 @@ ui <- fluidPage(
      
       checkboxGroupInput("variables", 
                   h3("Seleccione la variable dependiente"), 
-                  choices = c("Edad"           ,                "Estudios"        ,                 "Sexo", "gestion_alberto", "gestion_kicillof",  "imagen_kicillof", "imagen_larreta"  ),
+                  choices = c("Edad"           ,                "Estudios"        ,                 "Sexo", 
+                              
+                              "gestion_alberto", "gestion_kicillof",  "imagen_kicillof", "imagen_larreta",
+                              "preocupacion_covid","riesgo_covid","covid_salud_economia"),
                   selected = c("Edad"           ,                "Estudios"        ,                 "Sexo")),
       selectInput("dependent", 
                          h3("Seleccione espacio politico"), 
@@ -47,13 +50,13 @@ server <- function(input, output) {
     data_subset$target <- ifelse(data_subset$espacio_politico == input$dependent, 1, 0) 
     
     data_subset_complete = data_subset[complete.cases(data_subset), ]
-    #print(reformulate(input$variables,"target"))
+    
     #Hago la regresion lineal
-    write.csv(data_subset,"data_subset_complete.csv", row.names = FALSE)
+    
     model <- lm( reformulate(input$variables,"target") , data = data_subset_complete)
     #Printeo los coeficientes
     
-    print(summary(model)$coef)
+    #print(summary(model)$coef)
     
     #ploteo los coeficientes
     minx = min(summary(model)$coef[,1])-max(summary(model)$coef[,2])*2
@@ -64,10 +67,10 @@ server <- function(input, output) {
       y_feature <- dnorm(x, mean=summary(model)$coef[i,1] , sd=summary(model)$coef[i,2])
       if(i == 1){
         plot(x, y_feature,ylab="coeficiente de las variables", type="l", lwd=1, col=colors[i], ylim=c(0,100), xlim=c(minx,maxx))
-        print(colors[i])
+        
       }else{
         lines(x,y_feature,col=colors[i])
-        print(colors[i])
+        
       }
     }
     legend("topright", legend=c('Bias',input$variables),
@@ -78,7 +81,17 @@ server <- function(input, output) {
      
   })
  
-  
+  output$corrplot <- renderPlot({
+    data_subset$target <- ifelse(data_subset$espacio_politico == input$dependent, 1, 0) 
+    subset = data_subset[c("Edad"           ,                "Estudios"        ,                 "Sexo", 
+                           
+                           "gestion_alberto", "gestion_kicillof",  "imagen_kicillof", "imagen_larreta",
+                           "preocupacion_covid","riesgo_covid","covid_salud_economia","target")]
+    subset = subset[complete.cases(subset), ]
+    corrplot(cor(subset), order = "hclust")
+    
+    
+  })
   
   
 }

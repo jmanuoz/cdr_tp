@@ -1,9 +1,11 @@
 
 #importo los datos
-data <- read.csv(file = 'AMBA Julio 2020 - para JM (1).csv', sep=";")
+data <- read_delim("AMBA Julio 2020 - para JM (1).csv", 
+                   ";", escape_double = FALSE, locale = locale(encoding = "ISO-8859-1"), 
+                   trim_ws = TRUE)
 
 #me quedo con un subset de columnas (para probar)
-data_subset <- data[c("Edad", "Sexo", "Estudios", "p03","p04","p05","p12","p15")]
+data_subset <- data[c("Edad", "Sexo", "Estudios", "p03","p04","p05","p12","p15","p19","p20","p23")]
 
 #Como son variables categoricas, las transformo en numericas:
 
@@ -30,8 +32,16 @@ data_subset$imagen_larreta = as.numeric(factor(data_subset$p15,ordered = TRUE,
                                                 levels = c("Muy Mala", "Mala", "Regular negativa","No sabe","Regular positiva", "Buena", "Muy buena")))
 data_subset$imagen_kicillof = as.numeric(factor(data_subset$p12,ordered = TRUE, 
                                                 levels = c("Muy Mala", "Mala", "Regular negativa","No sabe","Regular positiva", "Buena", "Muy buena")))
+data_subset$preocupacion_covid = as.numeric(factor(data_subset$p19,ordered = TRUE, 
+                                                levels = c("Muy preocupado", "Bastante preocupado", "Poco preocupado", "No sabe", "Nada preocupado")))
+
+data_subset$riesgo_covid = as.numeric(factor(data_subset$p20,ordered = TRUE, 
+                                                   levels = c("Muy en riesgo", "Bastante en riesgo", "Poco en riesgo", "No sabe", "Nada en riesgo")))
+
+data_subset$covid_salud_economia = as.numeric(factor(data_subset$p23,ordered = FALSE, 
+                                             levels = c("La situación económica", "La situación sanitaria", "No sabe")))
 
 
 data_subset$espacio_politico <- data_subset$p03
-print(dim(data_subset))
+
 
