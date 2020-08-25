@@ -75,37 +75,7 @@ server <- function(input, output) {
      
      
   })
-  output$variance <- renderPlot({
-    subset = dataset_norm[c(input$variables,input$colored)]
-    subset = subset[complete.cases(subset), ]
-    
-    
-    res.pca <- prcomp(subset[input$variables], scale = TRUE)
-    
-    #GRAFICOS
-    fviz_eig(res.pca,choice="variance")
-    
-   
-  })
-  output$corrplot <- renderPlot({
-    subset = dataset_norm[c(input$variables,paste(input$colored,"_num",sep=""))]
-    subset = subset[complete.cases(subset), ]
-    corrplot(cor(subset), order = "hclust")
-    
-    
-  })
-  
-  output$vars <- renderPlot({
-    subset = dataset_norm[c(input$variables,paste(input$colored,"_num",sep=""))]
-    subset = subset[complete.cases(subset), ]
-    res.pca <- prcomp(subset[input$variables], scale = TRUE)
-    
-    fviz_pca_var(res.pca,
-                 col.var = "contrib", # Color by contributions to the PC
-                 gradient.cols = c("#00AFBB", "#E7B800", "#FC4E07"),
-                 repel = TRUE     # Avoid text overlapping
-    )
-  })
+ 
   
   
   
