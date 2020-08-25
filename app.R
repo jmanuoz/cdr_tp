@@ -22,7 +22,7 @@ ui <- fluidPage(
      
       checkboxGroupInput("variables", 
                   h3("Seleccione la variable dependiente"), 
-                  choices = c("Edad"           ,                "Estudios"        ,                 "Sexo", "gestion_alberto", "gestion_kicillof", "gestion_larreta" , "imagen_kicillof", "imagen_larreta"  ),
+                  choices = c("Edad"           ,                "Estudios"        ,                 "Sexo", "gestion_alberto", "gestion_kicillof",  "imagen_kicillof", "imagen_larreta"  ),
                   selected = c("Edad"           ,                "Estudios"        ,                 "Sexo")),
       selectInput("dependent", 
                          h3("Seleccione espacio politico"), 
@@ -45,9 +45,11 @@ server <- function(input, output) {
     
     #Genero la columna a predecir
     data_subset$target <- ifelse(data_subset$espacio_politico == input$dependent, 1, 0) 
+    
     data_subset_complete = data_subset[complete.cases(data_subset), ]
+    #print(reformulate(input$variables,"target"))
     #Hago la regresion lineal
-   
+    write.csv(data_subset,"data_subset_complete.csv", row.names = FALSE)
     model <- lm( reformulate(input$variables,"target") , data = data_subset_complete)
     #Printeo los coeficientes
     
