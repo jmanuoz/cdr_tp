@@ -5,7 +5,7 @@ data <- read_delim("AMBA Julio 2020 - para JM (1).csv",
                    trim_ws = TRUE)
 
 #me quedo con un subset de columnas (para probar)
-data_subset <- data[c("Edad", "Sexo", "Estudios", "p03","p04","p05","p12","p15","p19","p20","p23")]
+data_subset <- data[c("Edad", "Sexo", "Estudios","p02", "p03","p04","p05","p12","p15","p19","p20","p23")]
 
 #Como son variables categoricas, las transformo en numericas:
 
@@ -39,9 +39,10 @@ data_subset$riesgo_covid = as.numeric(factor(data_subset$p20,ordered = TRUE,
                                                    levels = c("Muy en riesgo", "Bastante en riesgo", "Poco en riesgo", "No sabe", "Nada en riesgo")))
 
 data_subset$covid_salud_economia = as.numeric(factor(data_subset$p23,ordered = FALSE, 
-                                             levels = c("La situación económica", "La situación sanitaria", "No sabe")))
+                                             levels = c("La situación económica",  "No sabe","La situación sanitaria")))
 
-
+data_subset$clase_social = as.numeric(factor(data_subset$p02,ordered = FALSE, 
+                                                     levels = c("Clase baja",       "Clase media baja", "Clase media" ,     "No sabe"  ,        "Clase media alta", "Clase alta" )))
 data_subset$espacio_politico <- data_subset$p03
 
 

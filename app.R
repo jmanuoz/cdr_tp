@@ -8,6 +8,11 @@ library(corrplot)
 
 #Este archivo transforma los datos de texto a valores numéricos para poder trabajarlos en las reducciones
 source("codigo.R", encoding = "UTF-8")
+
+features_data =  c("Edad"           ,                "Estudios"        ,                 "Sexo", "clase_social",
+              
+              "gestion_alberto", "gestion_kicillof",  "imagen_kicillof", "imagen_larreta",
+              "preocupacion_covid","riesgo_covid","covid_salud_economia")
 #setwd("D:/materias/visualización de datos/TP")
 ui <- fluidPage(
   
@@ -22,10 +27,7 @@ ui <- fluidPage(
      
       checkboxGroupInput("variables", 
                   h3("Seleccione la variable dependiente"), 
-                  choices = c("Edad"           ,                "Estudios"        ,                 "Sexo", 
-                              
-                              "gestion_alberto", "gestion_kicillof",  "imagen_kicillof", "imagen_larreta",
-                              "preocupacion_covid","riesgo_covid","covid_salud_economia"),
+                  choices =features_data,
                   selected = c("Edad"           ,                "Estudios"        ,                 "Sexo")),
       selectInput("dependent", 
                          h3("Seleccione espacio politico"), 
@@ -83,10 +85,7 @@ server <- function(input, output) {
  
   output$corrplot <- renderPlot({
     data_subset$target <- ifelse(data_subset$espacio_politico == input$dependent, 1, 0) 
-    subset = data_subset[c("Edad"           ,                "Estudios"        ,                 "Sexo", 
-                           
-                           "gestion_alberto", "gestion_kicillof",  "imagen_kicillof", "imagen_larreta",
-                           "preocupacion_covid","riesgo_covid","covid_salud_economia","target")]
+    subset = data_subset[c(features_data,"target")]
     subset = subset[complete.cases(subset), ]
     corrplot(cor(subset), order = "hclust")
     
